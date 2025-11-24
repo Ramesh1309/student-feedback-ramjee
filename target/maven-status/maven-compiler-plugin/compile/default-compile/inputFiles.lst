@@ -1,0 +1,7 @@
+/home/kv/Documents/workspace-spring-tool-suite-4-4.26.0.RELEASE/Student-Feedback-Ramjee/src/main/java/com/cma/principal/StudentFeedbackRamjeeApplication.java
+/home/kv/Documents/workspace-spring-tool-suite-4-4.26.0.RELEASE/Student-Feedback-Ramjee/src/main/java/com/cma/principal/controller/StudentFeedbackController.java
+/home/kv/Documents/workspace-spring-tool-suite-4-4.26.0.RELEASE/Student-Feedback-Ramjee/src/main/java/com/cma/principal/entity/StudentFeedback.java
+/home/kv/Documents/workspace-spring-tool-suite-4-4.26.0.RELEASE/Student-Feedback-Ramjee/src/main/java/com/cma/principal/entity/StudentFeedbackDBEntity.java
+/home/kv/Documents/workspace-spring-tool-suite-4-4.26.0.RELEASE/Student-Feedback-Ramjee/src/main/java/com/cma/principal/entity/StudentResponse.java
+/home/kv/Documents/workspace-spring-tool-suite-4-4.26.0.RELEASE/Student-Feedback-Ramjee/src/main/java/com/cma/principal/jpa/StudentFeedbackResponseJPA.java
+/home/kv/Documents/workspace-spring-tool-suite-4-4.26.0.RELEASE/Student-Feedback-Ramjee/src/main/java/com/cma/principal/service/StudentFeedbackService.java

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>CMA Student Feedback Form</title>
+</head>
+<body>
+<h2>CMA Student Feedback Form</h2>
+
+<form id="feedbackForm">
+    <div>
+        <label>Student Name:</label>
+        <input type="text" name="studentName" required>
+    </div>
+    <div>
+        <label>Student ID:</label>
+        <input type="text" name="studentId" required>
+    </div>
+    <div>
+        <label>Grade:</label>
+        <input type="text" name="studentGrade" required>
+    </div>
+    <div>
+        <label>Section:</label>
+        <input type="text" name="studentSection" required>
+    </div>
+
+    <hr>
+
+    <h3>Questions</h3>
+    <div id="questionsContainer">
+        <div style="margin-top:8px;">
+            <label>Question: </label>
+            <input type="text" name="question_0" value="Ramjee Demonstrates strong subject knowledge" readonly style="width:300px;">
+            <label> Answer: </label>
+            <label><input type="radio" name="answer_0" value="Always"> Always</label>
+            <label><input type="radio" name="answer_0" value="Often"> Often</label>
+            <label><input type="radio" name="answer_0" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="answer_0" value="Rarely"> Rarely</label>
+        </div>
+        <div style="margin-top:8px;">
+            <label>Question: </label>
+            <input type="text" name="question_1" value="Ramjee Explains concepts clearly" readonly style="width:300px;">
+            <label> Answer: </label>
+            <label><input type="radio" name="answer_1" value="Always"> Always</label>
+            <label><input type="radio" name="answer_1" value="Often"> Often</label>
+            <label><input type="radio" name="answer_1" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="answer_1" value="Rarely"> Rarely</label>
+        </div>
+        <div style="margin-top:8px;">
+            <label>Question: </label>
+            <input type="text" name="question_2" value="Ramjee Encourages student participation" readonly style="width:300px;">
+            <label> Answer: </label>
+            <label><input type="radio" name="answer_2" value="Always"> Always</label>
+            <label><input type="radio" name="answer_2" value="Often"> Often</label>
+            <label><input type="radio" name="answer_2" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="answer_2" value="Rarely"> Rarely</label>
+        </div>
+    </div>
+
+    <button type="button" id="addQuestionBtn" style="margin-top:10px;">➕ Add Question</button>
+    <br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+const options = ["Always", "Often", "Sometimes", "Rarely"];
+const questionsContainer = document.getElementById('questionsContainer');
+const addQuestionBtn = document.getElementById('addQuestionBtn');
+const form = document.getElementById('feedbackForm');
+
+let questionCount = 3;
+
+// Add new question dynamically
+addQuestionBtn.addEventListener('click', () => {
+    const index = questionCount;
+    const wrapper = document.createElement('div');
+    wrapper.style.marginTop = '8px';
+
+    const qLabel = document.createElement('label');
+    qLabel.textContent = 'Question: ';
+    const qInput = document.createElement('input');
+    qInput.type = 'text';
+    qInput.name = 'question_' + index;
+    qInput.placeholder = 'Enter your question';
+    qInput.style.width = '350px';
+
+    wrapper.appendChild(qLabel);
+    wrapper.appendChild(qInput);
+
+    options.forEach(opt => {
+        const optLabel = document.createElement('label');
+        optLabel.style.marginLeft = '15px';
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'answer_' + index;
+        radio.value = opt;
+        optLabel.appendChild(radio);
+        optLabel.appendChild(document.createTextNode(opt));
+        wrapper.appendChild(optLabel);
+    });
+
+    questionsContainer.appendChild(wrapper);
+    questionCount++;
+});
+
+// Submit handler with validation and API call
+form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const studentName = formData.get('studentName');
+    const studentId = formData.get('studentId');
+    const studentGrade = formData.get('studentGrade');
+    const studentSection = formData.get('studentSection');
+
+    const responses = [];
+
+    for(let i = 0; i < questionCount; i++) {
+        const question = formData.get('question_' + i);
+        const answer = formData.get('answer_' + i);
+
+        if(!answer) {
+            alert(`Please provide an answer for the question: "${question || 'New question'}"`);
+            return;
+        }
+
+        if(question) {
+            responses.push({question, answer});
+        }
+    }
+
+    const jsonData = {
+        studentName,
+        studentId,
+        studentGrade,
+        studentSection,
+        studentResponse: JSON.stringify(responses)
+    };
+
+    fetch('http://localhost:8080/postStudentFeedback', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(jsonData)
+    })
+    .then(response => {
+        if(!response.ok){
+            alert('Failed to submit feedback. Status: ' + response.status);
+        } else {
+            alert('Feedback submitted successfully!');
+            form.reset();
+            questionCount = 3;
+        }
+    })
+    .catch(error => {
+        alert('Error submitting feedback: ' + error);
+    });
+});
+</script>
+</body>
+</html>
